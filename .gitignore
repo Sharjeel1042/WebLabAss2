@@ -1,0 +1,13 @@
+# Dependencies (reinstall with npm install)
+node_modules/
+
+# Secrets: database URI and password
+.env
+
+# Word lock files created while a document is open
+~$*
+
+# Logs and OS files
+npm-debug.log*
+.DS_Store
+Thumbs.db

@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Campus Services</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">SC</span>
+      <div>
+        <h1>Smart Campus Services</h1>
+        <p class="muted">Report and track campus service requests</p>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="dashboard">Dashboard</button>
+      <button class="tab" data-tab="requests">Requests</button>
+      <button class="tab" data-tab="users">Users</button>
+      <button class="tab" data-tab="categories">Categories</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Dashboard -->
+    <section id="dashboard" class="panel active">
+      <div class="stats">
+        <div class="stat"><span class="stat-label">Total requests</span><span class="stat-value" id="stat-total">0</span></div>
+        <div class="stat"><span class="stat-label">Open</span><span class="stat-value" id="stat-open">0</span></div>
+        <div class="stat"><span class="stat-label">In progress</span><span class="stat-value" id="stat-progress">0</span></div>
+        <div class="stat"><span class="stat-label">Resolved</span><span class="stat-value" id="stat-resolved">0</span></div>
+      </div>
+
+      <div class="card">
+        <h2>Unresolved requests by category</h2>
+        <div id="category-bars" class="bars"></div>
+      </div>
+
+      <div class="card">
+        <h2>Latest requests</h2>
+        <ul id="latest-list" class="latest"></ul>
+      </div>
+    </section>
+
+    <!-- Requests -->
+    <section id="requests" class="panel">
+      <div class="card">
+        <h2>New service request</h2>
+        <form id="request-form" class="grid-form">
+          <label>Requester
+            <select name="requester" required></select>
+          </label>
+          <label>Category
+            <select name="category" required></select>
+          </label>
+          <label>Priority
+            <select name="priority">
+              <option>Low</option>
+              <option selected>Medium</option>
+              <option>High</option>
+            </select>
+          </label>
+          <label class="span-all">Description
+            <textarea name="description" rows="3" minlength="10" maxlength="1000" required
+              placeholder="Describe the problem (at least 10 characters)"></textarea>
+          </label>
+          <div class="span-all form-actions">
+            <button type="submit" class="btn primary">Submit request</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>All requests</h2>
+          <div class="filters">
+            <select id="filter-status">
+              <option value="">All statuses</option>
+              <option>Open</option>
+              <option>In Progress</option>
+              <option>Resolved</option>
+            </select>
+            <select id="filter-priority">
+              <option value="">All priorities</option>
+              <option>Low</option>
+              <option>Medium</option>
+              <option>High</option>
+            </select>
+            <select id="filter-category">
+              <option value="">All categories</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Requester</th>
+                <th>Category</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="requests-body"></tbody>
+          </table>
+        </div>
+        <p id="requests-empty" class="empty" hidden>No requests match these filters.</p>
+      </div>
+    </section>
+
+    <!-- Users -->
+    <section id="users" class="panel">
+      <div class="card">
+        <h2>Add user</h2>
+        <form id="user-form" class="grid-form">
+          <label>Name
+            <input name="name" maxlength="100" required>
+          </label>
+          <label>Email
+            <input name="email" type="email" required>
+          </label>
+          <label>Role
+            <select name="role">
+              <option value="student">Student</option>
+              <option value="staff">Staff</option>
+            </select>
+          </label>
+          <div class="span-all form-actions">
+            <button type="submit" class="btn primary">Add user</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Users</h2>
+          <div class="filters">
+            <select id="filter-role">
+              <option value="">All roles</option>
+              <option value="student">Students</option>
+              <option value="staff">Staff</option>
+            </select>
+          </div>
+        </div>
+        <ul id="users-list" class="item-list"></ul>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section id="categories" class="panel">
+      <div class="card">
+        <h2>Add category</h2>
+        <form id="category-form" class="grid-form">
+          <label>Name
+            <input name="name" maxlength="80" required>
+          </label>
+          <label class="span-2">Description
+            <input name="description">
+          </label>
+          <div class="span-all form-actions">
+            <button type="submit" class="btn primary">Add category</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Categories</h2>
+        <ul id="categories-list" class="item-list"></ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- Edit request dialog -->
+  <dialog id="edit-dialog">
+    <form id="edit-form" method="dialog">
+      <h2>Edit request</h2>
+      <label>Description
+        <textarea name="description" rows="4" minlength="10" maxlength="1000" required></textarea>
+      </label>
+      <div class="row">
+        <label>Category
+          <select name="category"></select>
+        </label>
+        <label>Priority
+          <select name="priority">
+            <option>Low</option>
+            <option>Medium</option>
+            <option>High</option>
+          </select>
+        </label>
+        <label>Status
+          <select name="status">
+            <option>Open</option>
+            <option>In Progress</option>
+            <option>Resolved</option>
+          </select>
+        </label>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn" id="edit-cancel">Cancel</button>
+        <button type="submit" class="btn primary">Save changes</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
